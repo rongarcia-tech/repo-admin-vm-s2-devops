@@ -1,19 +1,25 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: DeployToVM
+  jobs:
+  - deployment: InstallApacheAndConfigure
+    displayName: "Instalar y configurar apache"
+    
+    environment: "admin-vm-s2-devops"
+      name: "devazure-enviroment-vm-s2-devops"
+      resourceType: VirtualMachine
+      
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: |
+              echo "Iniciando la instalación de Apache2"
+              sudo apt-get update
+              sudo apt-get install -y apache2
+              echo "Hola, configurado desde el pipeline la VM" | sudo tee /var/www/html/index.html
+              sudo systemctl restart apache2
+              echo "Instalación y configuracion completa"
+            displayName: "Instalar Apache y configurar index.html"
