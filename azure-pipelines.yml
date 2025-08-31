@@ -7,7 +7,7 @@ stages:
   - deployment: InstallApacheAndConfigure
     displayName: "Instalar y configurar apache"
     
-    environment: "admin-vm-s2-devops"
+    environment:
       name: "devazure-enviroment-vm-s2-devops"
       resourceType: VirtualMachine
       
